@@ -49,6 +49,15 @@ G2OSolver::~G2OSolver() {
     g2o::HyperGraphActionLibrary::destroy();
 }
 
+void G2OSolver::savePosegraph(std::string name) {
+    // save result to File
+    std::ofstream outputStream;
+    outputStream.open(name + std::to_string(optimizationNumber) + ".g2o", std::ofstream::binary);
+    optimizer_.save(outputStream);
+    outputStream.close();
+    ++optimizationNumber;
+}
+
 void G2OSolver::Clear() {
     corrections_.clear();
 }
@@ -59,6 +68,8 @@ const karto::ScanSolver::IdPoseVector &G2OSolver::GetCorrections() const {
 
 void G2OSolver::Compute() {
     corrections_.clear();
+
+    G2OSolver::savePosegraph("before");
 
     // Fix the first node in the graph to hold the map in place
     g2o::OptimizableGraph::Vertex *first = optimizer_.vertex(0);
@@ -82,12 +93,7 @@ void G2OSolver::Compute() {
         return;
     }
 
-    // save result to File
-    std::ofstream outputStream;
-    outputStream.open("test" + std::to_string(optimizationNumber) + ".g2o", std::ofstream::binary);
-    optimizer_.save(outputStream);
-    outputStream.close();
-    ++optimizationNumber;
+    G2OSolver::savePosegraph("after");
 
     // Write the result so it can be used by the mapper
     g2o::SparseOptimizer::VertexContainer nodes = optimizer_.activeVertices();

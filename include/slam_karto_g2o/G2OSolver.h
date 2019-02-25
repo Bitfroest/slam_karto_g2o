@@ -82,6 +82,8 @@ public:
 
 private:
 
+    void savePosegraph(std::string name);
+
     karto::ScanSolver::IdPoseVector corrections_;
 
     g2o::SparseOptimizer optimizer_;
