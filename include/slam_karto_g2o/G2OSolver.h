@@ -1,6 +1,6 @@
 /*********************************************************************
 *
-*  Copyright (c) 2017, Saurav Agarwal 
+*  Copyright (c) 2017, Saurav Agarwal
 *  All rights reserved.
 *
 *********************************************************************/
@@ -12,77 +12,76 @@
 #include <open_karto/Mapper.h>
 #include "g2o/core/sparse_optimizer.h"
 
-typedef std::vector<karto::Matrix3> CovarianceVector;
+typedef std::vector <karto::Matrix3> CovarianceVector;
 
 /**
  * @brief Wrapper for G2O to interface with Open Karto
  */
-class G2OSolver : public karto::ScanSolver
-{
-  public:
+class G2OSolver : public karto::ScanSolver {
+public:
 
     G2OSolver();
-    
+
     virtual ~G2OSolver();
 
-  public:
-    
+public:
+
     /**
      * @brief Clear the vector of corrections
      * @details Empty out previously computed corrections
      */
     virtual void Clear();
-    
+
     /**
      * @brief Solve the SLAM back-end
      * @details Calls G2O to solve the SLAM back-end
      */
     virtual void Compute();
-    
+
     /**
      * @brief Get the vector of corrections
      * @details Get the vector of corrections
      * @return Vector with corrected poses
      */
-    virtual const karto::ScanSolver::IdPoseVector& GetCorrections() const;
+    virtual const karto::ScanSolver::IdPoseVector &GetCorrections() const;
 
     /**
      * @brief Add a node to pose-graph
      * @details Add a node which is a robot pose to the pose-graph
-     * 
+     *
      * @param pVertex the node to be added in
      */
-    virtual void AddNode(karto::Vertex<karto::LocalizedRangeScan>* pVertex);
-    
+    virtual void AddNode(karto::Vertex <karto::LocalizedRangeScan> *pVertex);
+
     /**
      * @brief Add an edge constraint to pose-graph
      * @details Adds a relative pose measurement constraint between two poses in the graph
-     * 
+     *
      * @param pEdge [description]
      */
-    virtual void AddConstraint(karto::Edge<karto::LocalizedRangeScan>* pEdge);
+    virtual void AddConstraint(karto::Edge <karto::LocalizedRangeScan> *pEdge);
 
     /**
-     * @brief Get the pose-graph 
+     * @brief Get the pose-graph
      * @details Get the underlying graph from g2o, return the graph of constraints
-     * 
+     *
      * @param g the graph
      */
-    void getGraph(std::vector<Eigen::Vector2d> &nodes, std::vector<std::pair<Eigen::Vector2d, Eigen::Vector2d> > &edges);
+    void
+    getGraph(std::vector <Eigen::Vector2d> &nodes, std::vector <std::pair<Eigen::Vector2d, Eigen::Vector2d>> &edges);
 
     /**
      * @brief Use robust kernel in back-end
      * @details Uses Dynamic Covariance scaling kernel in back-end
-     * 
+     *
      * @param flag variable, if true robust kernel will be used
      */
-    void useRobustKernel(bool flag)
-    {
+    void useRobustKernel(bool flag) {
         useRobustKernel_ = flag;
     }
 
-  private:
-    
+private:
+
     karto::ScanSolver::IdPoseVector corrections_;
 
     g2o::SparseOptimizer optimizer_;
@@ -91,7 +90,8 @@ class G2OSolver : public karto::ScanSolver
 
     bool useRobustKernel_;
 
+    int optimizationNumber;
+
 };
 
 #endif // KARTO_G2OSolver_H
-
