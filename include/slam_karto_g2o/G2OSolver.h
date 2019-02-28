@@ -84,7 +84,13 @@ private:
 
     void savePosegraph(std::string name);
 
+    void WriteGraphFile(std::string name);
+
     karto::ScanSolver::IdPoseVector corrections_;
+
+    std::vector <karto::Vertex<karto::LocalizedRangeScan> *> nodes;
+
+    std::vector <karto::Edge<karto::LocalizedRangeScan> *> edges;
 
     g2o::SparseOptimizer optimizer_;
 
@@ -93,6 +99,8 @@ private:
     bool useRobustKernel_;
 
     int optimizationNumber;
+
+    bool wasOptimized = false;
 
 };
 
